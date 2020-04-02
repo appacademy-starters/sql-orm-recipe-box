@@ -18,9 +18,14 @@ function handleError(e, data, property, fileName) {
 }
 
 router.post('/', async (req, res) => {
-  const recipeId = Number.parseInt(req.body.recipeId);
-  await instructionRepo.createNewInstruction(req.body.specification, recipeId);
-  res.redirect('/recipes/' + req.body.recipeId + '/edit');
+  try {
+    const recipeId = Number.parseInt(req.body.recipeId);
+    await instructionRepo.createNewInstruction(req.body.specification, recipeId);
+    res.redirect('/recipes/' + req.body.recipeId + '/edit');
+  } catch (e) {
+    console.error(e);
+    res.redirect('/recipes/' + req.body.recipeId + '/edit?instructionInsertError=' + e.message);
+  }
 });
 
 module.exports = router;

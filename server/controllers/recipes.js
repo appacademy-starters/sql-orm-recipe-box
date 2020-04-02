@@ -63,6 +63,8 @@ router.post('/:id/delete', async (req, res) => {
 
 router.get('/:id/edit', async (req, res) => {
   let error = loadingModuleError;
+  let ingredientInsertError = req.query.ingredientInsertError;
+  let instructionInsertError = req.query.instructionInsertError;
   let recipe;
   let measures;
   if (!error) {
@@ -82,6 +84,8 @@ router.get('/:id/edit', async (req, res) => {
     error,
     recipe,
     measures,
+    ingredientInsertError,
+    instructionInsertError,
   });
 });
 
@@ -91,9 +95,12 @@ router.get('/:id', async (req, res) => {
   if (!error) {
     try {
       recipe = await recipeRepo.getRecipeById(req.params.id);
-      recipe.created = moment(recipe.createdAt).format('MMM Do, YYYY');
-      recipe.updated = moment(recipe.updatedAt).format('MMM Do, YYYY');
+      if (recipe) {
+        recipe.created = moment(recipe.createdAt).format('MMM Do, YYYY');
+        recipe.updated = moment(recipe.updatedAt).format('MMM Do, YYYY');
+      }
     } catch (e) {
+      console.error(e);
       error = `An error ocurred that reads "${e.message}". Check the console for more details.`;
     }
   }

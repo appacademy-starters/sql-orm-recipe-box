@@ -18,10 +18,15 @@ function handleError(e, data, property, fileName) {
 }
 
 router.post('/', async (req, res) => {
-  const recipeId = Number.parseInt(req.body.recipeId);
-  const { amount, foodStuff, measurementUnitId } = req.body;
-  await ingredientsRepo.createNewIngredient(amount, recipeId, measurementUnitId, foodStuff);
-  res.redirect('/recipes/' + req.body.recipeId + '/edit');
+  try {
+    const recipeId = Number.parseInt(req.body.recipeId);
+    const { amount, foodStuff, measurementUnitId } = req.body;
+    await ingredientsRepo.createNewIngredient(amount, recipeId, measurementUnitId, foodStuff);
+    res.redirect('/recipes/' + req.body.recipeId + '/edit');
+  } catch (e) {
+    console.error(e);
+    res.redirect('/recipes/' + req.body.recipeId + '/edit?ingredientInsertError=' + e.message);
+  }
 });
 
 module.exports = router;
