@@ -320,25 +320,27 @@ The `bulkInsert` method takes two parameters:
 
 You can see that the first object has been provided by the example. Now, create
 objects for all of these values, as well. (The empty item in the list is an
-empty string.) Make sure you do them in this order, otherwise the other prepared
-seed data won't make sense.
+empty string and is intentional) Make sure you do them **in this order,** or
+when we get to the seed data for the other tables it won't work. (We've supplied
+you with files for the seed data for the other tables because there is a lot of
+it)
 
-* fluid ounces
-* gallons
-* grams
-* liters
-* milliliters
-* ounces
-* pinch
-* pints
-* pounds
-* quarts
-* tablespoons
-* teaspoons
-*
-* cans
-* slices
-* splash
+* "fluid ounces"
+* "gallons"
+* "grams"
+* "liters"
+* "milliliters"
+* "ounces"
+* "pinch"
+* "pints"
+* "pounds"
+* "quarts"
+* "tablespoons"
+* "teaspoons"
+* ""
+* "cans"
+* "slices"
+* "splash"
 
 Now, run the Sequelize CLI with the command `db:seed:all`.
 
@@ -365,7 +367,7 @@ to track when the recipe has been created and updated! Your job is to
 
 Run your migration and confirm that you defined it correctly by checking the
 attributes in the description of the table. The important parts to check are
-that the "title" column is a VARCHAR(20) and is non-nullable. (The "Collation"
+that the "title" column is a VARCHAR(200) and is non-nullable. (The "Collation"
 column has been removed for brevity.)
 
 ```
@@ -373,7 +375,7 @@ column has been removed for brevity.)
   Column   |           Type           | Nullable |  Default
 -----------+--------------------------+----------+------------
  id        | integer                  | not null | nextval(...
- title     | character varying(20)    | not null |
+ title     | character varying(200)   | not null |
  createdAt | timestamp with time zone | not null |
  updatedAt | timestamp with time zone | not null |
 Indexes:
@@ -389,7 +391,7 @@ model. Here's the specification for the "instructions" table.
 |---------------|-------------|--------------|
 | id            | SERIAL      | PK           |
 | specification | TEXT        | NOT NULL     |
-| list_order    | INTEGER     | NOT NULL     |
+| listOrder     | INTEGER     | NOT NULL     |
 | recipeId      | INTEGER     | FK, NOT NULL |
 
 When you type out your migration generation command, the "--attributes"
@@ -484,13 +486,48 @@ all of them. In the **data-access-layer** directory, you will find three text
 files each containing JavaScript objects on each row that match the tables
 in the previous three sections.
 
+If you didn't seed the MeasurementUnits data in the correct order listed in the
+section above, you may have to redo that seed file, because the data from the
+text files depends on the ids of the data in the `MeasurementUnits` table being
+correct.
+
 There are three tables to seed: Ingredients, Instructions, and Recipes. It is
 important to note that you will need to seed them in the correct order due to
-foreign key dependencies. Create seeder files for each of them and use the
-contents of each of the text files in **data-access-layer** to do bulk inserts.
-If you end up doing it in the wrong order and getting a foreign key constraint
-error, just use the CLI to drop the database, create the database, migrate the
-database, and then you can try running your seeders, again.
+foreign key dependencies.
+
+Look at the data model for the application, again.
+
+![recipe box data model]
+
+You can see that the Instructions depends on Recipes because it has the foreign
+key "recipeId" to the Recipes table. You can also see that the Ingredients table
+has dependencies on the Recipes and MeasurementUnits tables because of its
+foreign keys "measurementUnitId" and "recipeId". (You've already seeded the
+MeasurementUnits table in Phase 4, so that data exists for use by the
+Ingredients table.) Recipes does not have any foreign keys. You need to seed
+Recipes, first, because it does not have any foreign keys and, therefore, does
+not have any data dependencies. Then, you can seed the Instructions and
+Ingredients tables in either order because their data dependencies will have
+been met.
+
+Create seeder files for them in that order: Recipes, first, then Ingredients and
+Instructions. Use the contents of each of the text files in
+**data-access-layer** to do bulk inserts.
+
+After you create each seed file, run
+
+```
+npx sequelize-cli db:seed:all
+```
+
+to make sure you don't have any errors. If you do, fix them before moving onto
+the next seed file.
+
+If you end up seeding the data in the wrong order and getting a foreign key
+constraint error, just use the CLI to drop the database, create the database,
+migrate the database, and then you can try running your seeders, again. You may
+need to rename your migration filenames to get your seeds running in the
+correct order.
 
 ## Phase 9: Updating models with references
 
@@ -666,3 +703,4 @@ functions.
 [link to the CREATE USER documentation]: https://www.postgresql.org/docs/current/sql-createuser.html
 [per-attribute validations]: https://sequelize.org/master/manual/validations-and-constraints.html#per-attribute-validations
 [Associations]: https://sequelize.org/master/manual/hooks.html#associations
+[recipe box data model]: https://appacademy-open-assets.s3-us-west-1.amazonaws.com/Module-SQL/assets/sql-recipe-box-data-model.png
