@@ -35,7 +35,7 @@
 { recipeId: 4, amount: 400, measurementUnitId: 4, foodStuff: 'can of chickpeas, drained', createdAt: new Date(), updatedAt: new Date() },
 { recipeId: 4, amount: 3, measurementUnitId: 12, foodStuff: 'vegan pesto', createdAt: new Date(), updatedAt: new Date() },
 { recipeId: 4, amount: 1, measurementUnitId: 12, foodStuff: 'olive oil', createdAt: new Date(), updatedAt: new Date() },
-{ recipeId: 4, amount: 1, measurementUnitId: 17, foodStuff: 'vinegar', createdAt: new Date(), updatedAt: new Date() },
+{ recipeId: 4, amount: 1, measurementUnitId: 16, foodStuff: 'vinegar', createdAt: new Date(), updatedAt: new Date() },
 { recipeId: 4, amount: 2, measurementUnitId: 14, foodStuff: 'ciabatta rolls', createdAt: new Date(), updatedAt: new Date() },
 { recipeId: 4, amount: 2, measurementUnitId: 14, foodStuff: 'handfulls mixed greens', createdAt: new Date(), updatedAt: new Date() },
 { recipeId: 3, amount: 250, measurementUnitId: 4, foodStuff: 'new potatoes, halved', createdAt: new Date(), updatedAt: new Date() },
